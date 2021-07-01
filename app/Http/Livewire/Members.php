@@ -28,7 +28,7 @@ class Members extends Component
         'email'           => 'required|email',
         'phone'           => 'required|min:6',
         'city'            => 'required|min:6',
-        'status'          => 'required'
+        // 'status'          => 'required'
     ];
 
     public function render()
@@ -97,7 +97,7 @@ class Members extends Component
 
     public function store()
     {
-        $this->validate();
+        $this->validate($this->rules);
         Member::updateOrCreate(['id'=>$this->id_member],
             [
                 'name'            => $this->name,
