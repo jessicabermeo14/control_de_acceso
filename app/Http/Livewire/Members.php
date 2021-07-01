@@ -13,11 +13,23 @@ class Members extends Component
     protected $queryString = ['search'=>['except'=>''],
     'perPage'=>['except'=>5]
     ];
-
-    public $name, $id_institution;
+    
+    public $id_member, $name, $last_name,$birthday, $document_type, $document_number, $email, $phone, $city, $status;
     public $modal = false;
     public $search = '';
     public $perPage = 5;
+
+    protected $rules = [
+        'name'            => 'required|min:6',
+        'last_name'       => 'required|min:6',
+        'birthday'        => 'required|min:6',
+        'document_type'   => 'required|min:6',
+        'document_number' => 'required|min:6',
+        'email'           => 'required|email',
+        'phone'           => 'required|min:6',
+        'city'            => 'required|min:6',
+        'status'          => 'required'
+    ];
 
     public function render()
     {
@@ -47,15 +59,33 @@ class Members extends Component
     
     public function cleanFields()
     {
-        $this->name = '';
-        $this->id_institution = '';
+        $this->name            = '';
+        $this->id_member       = '';
+        $this->last_name       = '';
+        $this->birthday        = '';
+        $this->document_type   = '';
+        $this->document_number = '';
+        $this->email           = '';
+        $this->phone           = '';
+        $this->city            = '';
+        $this->status          = '';
     }
 
     public function edit($id)
     {
-        $institution = Member::findOrFail($id);
-        $this->id_institution = $id;
-        $this->name = $institution->name;
+        $member = Member::findOrFail($id);
+        $this->id_member       = $id;
+        $this->name            = $member->name;
+        $this->last_name       = $member->last_name;
+        $this->birthday        = $member->birthday;
+        $this->document_type   = $member->document_type;
+        $this->document_number = $member->document_number;
+        $this->email           = $member->email;
+        $this->phone           = $member->phone;
+        $this->city            = $member->city;
+        $this->status          = $member->status;
+        
+
         $this->openModal();
     }
 
@@ -67,14 +97,22 @@ class Members extends Component
 
     public function store()
     {
-        $this->validate(['name'=>'required']);
-        Member::updateOrCreate(['id'=>$this->id_institution],
+        $this->validate();
+        Member::updateOrCreate(['id'=>$this->id_member],
             [
-                'name' => $this->name
+                'name'            => $this->name,
+                'last_name'       => $this->last_name,
+                'birthday'        => $this->birthday,
+                'document_type'   => $this->document_type,
+                'document_number' => $this->document_number,
+                'email'           => $this->email,
+                'phone'           => $this->phone,
+                'city'            => $this->city,
+                'status'          => $this->status
             ]);
          
         session()->flash('message',
-        $this->id_institution ? '¡Actualización exitosa!' : '¡Registro exitoso!');
+        $this->id_member ? '¡Actualización exitosa!' : '¡Registro exitoso!');
          
         $this->closeModal();
         $this->cleanFields();
